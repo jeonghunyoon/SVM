@@ -11,7 +11,7 @@ class Svm:
         test_set_file = open(file_name)
 
         for line in test_set_file.readlines():
-            tokens = line.strip().split(',')
+            tokens = line.strip().split('\t')
             features.append([float(tokens[0]), float(tokens[1])])
             labels.append(float(tokens[2]))
 

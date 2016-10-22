@@ -6,7 +6,7 @@ import random
 
 class SmoSimple:
     def __init__(self, features, labels, c, tolerance, max_iterations):
-        self.features = np.matrix(features).transpose()
+        self.features = np.matrix(features)
         self.labels = np.matrix(labels).transpose()
         self.c = c
         self.tolerance = tolerance
@@ -20,7 +20,7 @@ class SmoSimple:
         self.iter = 0
 
     def print_largrange(self):
-        print(self.alphas)
+        print(self.alphas, self.c, self.iter)
 
     def run(self):
         while (self.iter < self.max_iterations):
@@ -44,7 +44,7 @@ class SmoSimple:
                     # alphas의 값이 0과 c사이에 있도록 한다.
                     if (self.labels[i] != self.labels[j]):
                         l = max(0, self.alphas[j] - self.alphas[i])
-                        h = min(self.c, self.alphas[j] + self.alphas[i])
+                        h = min(self.c, self.c + self.alphas[j] - self.alphas[i])
                     else:
                         l = max(0, self.alphas[j] + self.alphas[i] - self.c)
                         h = min(self.c, self.alphas[j] + self.alphas[i])
@@ -67,7 +67,8 @@ class SmoSimple:
                     self.alphas[j] = clipAlpha(self.alphas[j], h, l)
 
                     if (abs(self.alphas[j] - alpha_j_old) < 0.00001):
-                        print "j not moving enouph"
+                        print(self.alphas)
+                        print "j not moving enough"
                         continue
                     # update alphas[j]
                     self.alphas[i] += self.labels[j] * self.labels[i] * (alpha_j_old - self.alphas[j])
@@ -83,11 +84,11 @@ class SmoSimple:
                          self.features[j, :] * self.features[j, :].T
 
                     if (0 < self.alphas[i]) and (self.c > self.alphas[i]):
-                        b = b1
+                        self.b = b1
                     elif (0 < self.alphas[j]) and (self.c > self.alphas[j]):
-                        b = b2
+                        self.b = b2
                     else:
-                        b = (b1 + b2) / 2.0
+                        self.b = (b1 + b2) / 2.0
 
                     alpha_pairs_changed += 1
                     print "iterations : %d i: %d, pairs changed %d" %(self.iter, i, alpha_pairs_changed)
@@ -106,7 +107,6 @@ def select_j_rand(i, m):
     while (j == i):
         j = int(random.uniform(0, m))
     return j
-
 
 # alpha j 의 값을 상한과 하한값의 사이에 둔다.
 def clipAlpha(a_j, h, l):
