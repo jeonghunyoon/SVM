@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-class Svm:
+class DataLoader:
     def __init__(self):
         self.training_set = {}
 
@@ -18,6 +18,4 @@ class Svm:
         self.training_set['features'] = features
         self.training_set['labels'] = labels
 
-        return self.training_set
-
-
+        return self.training_set['labels'], self.training_set['features']

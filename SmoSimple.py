@@ -67,7 +67,6 @@ class SmoSimple:
                     self.alphas[j] = clipAlpha(self.alphas[j], h, l)
 
                     if (abs(self.alphas[j] - alpha_j_old) < 0.00001):
-                        print(self.alphas)
                         print "j not moving enough"
                         continue
                     # update alphas[j]
